@@ -39,8 +39,9 @@ MJSXJ09CM|[x]|||||
 1. According the model name and model type, download the rootfs_new.bin to sdcard (32GB, formated single partition with FAT32) then put into camera.
 2. Wire out the UART and connect the uart of the camera via USB2TTL (115200, 8n1)
 3. Stop uboot via keeping 'Enter' pressed then power up the camera.
-4. Flash the hacked rootfs, enter the following commands after the prompt 'SigmaStar #' of uboot shell.
-  MJSXJ02CM
+4. Flash the hacked rootfs, enter the following commands after the prompt 'SigmaStar #' or 'GM #' of uboot shell.
+
+MJSXJ02CM
 ```
 fatload mmc 0:1 0x21000000 rootfs_new.bin
 sf probe
@@ -48,7 +49,7 @@ sf erase 0x260000 0x674000
 sf write 0x21000000 0x260000 0x674000
 reset
 ```
-  MJSXJ05CM
+MJSXJ05CM
 ```
 fatload mmc 0:1 0x21000000 rootfs_new.bin
 sf probe
@@ -56,7 +57,7 @@ sf erase 0x250000 0x69E000
 sf write 0x21000000 0x250000 0x69E000
 reset
 ```
-  MJSXJ06CM
+MJSXJ06CM
 ```
 fatload mmc 0:1 0x21000000 rootfs_new.bin
 sf probe
