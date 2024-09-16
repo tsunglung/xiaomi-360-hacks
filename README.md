@@ -13,6 +13,7 @@ For now this is it, I'm working on supporting more cameras.
 
 Model Name(s) | Picture | Model Type | Uart
 --- | --- | --- | --- 
+MJXJ03CM|![MJSXJ02CM](images/MJSXJ02CM.jpg)|IPC003|[uart](mjxj03cm_uart.jpg)
 MJSXJ01CM|![MJSXJ02CM](images/MJSXJ02CM.jpg)|IPC003|[uart](mjsxj01cm_uart.jpg)
 MJSXJ02CM|![MJSXJ02CM](images/MJSXJ02CM.jpg)|IPC009|[uart](mjsxj02cm_uart.jpg)
 MJSXJ03CM|![MJSXJ02CM](images/MJSXJ02CM.jpg)|IPC007A|[uart](mjsxj02cm_uart.jpg)
@@ -25,17 +26,18 @@ MJSXJ09CM|![MJSXJ09CM](images/MJSXJ09CM.jpg)|IPC029A|[uart](mjsxj09cm_uart.jpg)
 - [Install Instructions](#install-instructions)
 
 ## Features
-Feature | Onvif Server | RTSP Server | SSH Server | Web Configuration Server
---- | --- | --- | --- | --- 
-MJSXJ02CM|[x]|[x]|[x]|[x]|
-MJSXJ05CM||[x]|[x]||
-MJSXJ06CM|||||
-MJSXJ09CM|||||
+Feature | Telnet Server | Onvif Server | RTSP Server | SSH Server | Web Configuration Server
+--- | --- | --- | --- | --- | ---
+MJXJ03CM|[x]|||||
+MJSXJ02CM|[x]|[x]|[x]||[x]|
+MJSXJ05CM|[x]||[x]|||
+MJSXJ06CM|[x]|||||
+MJSXJ09CM|[x]|||||
 
 
 ## Install Instructions
 1. According the model name and model type, download the rootfs_new.bin to sdcard (32GB, formated single partition with FAT32) then put into camera.
-2. Wire out the UART and connect the uart of the camera via USB2TTL
+2. Wire out the UART and connect the uart of the camera via USB2TTL (115200, 8n1)
 3. Stop uboot via keeping 'Enter' pressed then power up the camera.
 4. Flash the hacked rootfs, enter the following commands after the prompt 'SigmaStar #' of uboot shell.
   MJSXJ02CM
