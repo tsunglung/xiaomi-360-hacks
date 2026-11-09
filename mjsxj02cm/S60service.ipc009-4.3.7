@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# Patched S60service for Xiaomi MJSXJ02CM / IPC009 firmware 4.3.7_0417.
+#
+# Why this patch exists:
+#   1. The stock S60service exits when /tmp/factory_mode exists, and
+#      S49factory always creates that file. The hack never starts.
+#   2. S49factory unmounts /mnt/sdcard when it finishes, so the hack files
+#      in /mnt/sdcard/manu_test are not available when S60service runs.
+#   3. /mnt/data is not guaranteed to be mounted when S60service runs.
+#
+# This version mounts both partitions, creates the library symlinks that
+# framegrabber needs and starts configure_services.sh directly.
+
+do_start() {
+	rl=$(runlevel -p)
+	runlevel -s $rl
+	telnetd
+	if [ -x "/mnt/sdcard/busybox-arm7l" ]; then
+           /mnt/sdcard/busybox-arm7l telnetd
+	fi
+
+        # Make sure /mnt/data is mounted (it is listed in /etc/fstab).
+        mount -a
+
+        # S49factory unmounts the SD card, so mount it again.
+        mount /dev/mmcblk0p1 /mnt/sdcard 2>/dev/null || \
+            mount /dev/mmcblk0 /mnt/sdcard 2>/dev/null || true
+
+        # framegrabber from the stock DATA partition expects version 0.1,
+        # but the libraries shipped in DATA are version 0.2.
+        ln -sf libshbf.so.0.2 /mnt/data/lib/libshbf.so.0.1
+        ln -sf libshbfev.so.0.2 /mnt/data/lib/libshbfev.so.0.1
+
+        # Start the hack services.
+        if [ -x /mnt/sdcard/manu_test/configure_services.sh ]; then
+            /mnt/sdcard/manu_test/configure_services.sh &
+        fi
+
+        # Optional user hook. Keep it for compatibility with the original
+        # project, but it is no longer required.
+        CUSTOM_POST_INIT=/mnt/data/scripts/post_init.sh
+        if [ -x ${CUSTOM_POST_INIT} ]; then
+            ${CUSTOM_POST_INIT} &
+        fi
+}
+
+do_stop() {
+	runlevel poweroff
+}
+
+case "$1" in
+	start)
+		do_start
+		;;
+	stop)
+		do_stop
+		;;
+	restart|reload)
+		"$0" stop
+		"$0" start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
