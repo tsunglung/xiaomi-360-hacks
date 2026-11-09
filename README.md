@@ -45,10 +45,15 @@ MJSXJ02CM
 ```
 fatload mmc 0:1 0x21000000 rootfs_new.bin
 sf probe
-sf erase 0x260000 0x674000
-sf write 0x21000000 0x260000 0x674000
+sf erase 0x260000 0x750000
+sf write 0x21000000 0x260000 0x68A200
 reset
 ```
+> The write length must match the real file size. The included
+> `mjsxj02cm/rootfs_new.bin` is 6,856,704 bytes (`0x68A200`). Writing
+> `0x674000` truncates the squashfs and the kernel panics with
+> `squashfs: unable to read id index table`. `0x750000` is the whole
+> ROOTFS partition and is safe to erase.
 MJSXJ05CM
 ```
 fatload mmc 0:1 0x21000000 rootfs_new.bin
